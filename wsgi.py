@@ -1,18 +1,20 @@
 from flask import Flask, request
-from bot import app  # Your existing PTB Application
+from telegram import Update
+from bot import app as telegram_app  # Import with alias
 import os
 
-server = Flask(__name__)
+# Initialize Flask app
+flask_app = Flask(__name__)
 
-@server.route('/webhook/' + os.environ['TOKEN'], methods=['POST'])
+@flask_app.route('/webhook/' + os.environ['TOKEN'], methods=['POST'])
 def telegram_webhook():
-    update = Update.de_json(request.get_json(), app.bot)
-    app.process_update(update)
+    update = Update.de_json(request.get_json(), telegram_app.bot)
+    telegram_app.process_update(update)
     return 'OK'
 
-@server.route('/')
+@flask_app.route('/')
 def health_check():
     return "BRACU Resource Bot is running!"
 
 if __name__ == '__main__':
-    server.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    flask_app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))

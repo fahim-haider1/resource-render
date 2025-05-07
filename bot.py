@@ -373,6 +373,9 @@ def main():
     print("Bot initialized (ready for webhook setup)")
     return app  # Return app for wsgi.py
 
+# ===== Global App Instance for WSGI =====
+app = main()  # Add this line right before the __main__ block
+
 if __name__ == '__main__':
     app = main()
     app.run_polling()  # Keep for local testing
